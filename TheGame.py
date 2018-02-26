@@ -1,144 +1,72 @@
 import random
 
-class game:
-    def __init__(self, lower, upper, difficulty, randomNum):
-        self.lower = lower
-        self.upper = upper
-        self.difficulty = difficulty
-        self.randomNum = randomNum
+ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n/10%10!=1)*(n%10<4)*n%10::4])
 
+class guessingGame:
 
-def getRandNum(lowerNum, upperNum):
-   return random.randint(lowerNum, upperNum)
-
-
-#This is the main function to play game.
-#could use some clean-up. Has a bug with the counter (number of tries). text prints out wrong number, sometimes.
-def startNewGame():
     gametypeDict = {'HARD': 50, 'MEDIUM': 20, 'EASY': 10}
-    numGuesses = 1
 
-    while True:
-        gametype = str.upper(input('What game type would you like? Type "easy", "medium", or "hard"'))
-        newGame = game(0, 0, 'easy', 0)
+    def __init__(self):
+        self.lowerBound = 0
+        self.upperBound = 0
+        self.secretNumber = 0
+        self.difficulty = ''
+        self.guesses = 0
 
-        if gametype in gametypeDict:
-            newGame.upper = gametypeDict.get(gametype)
-            newGame.difficulty = gametype
-            newGame.randomNum = getRandNum(0, gametypeDict.get(gametype))
-            print('You have selected {}. Therefore, you will need to guess a number between {} and {}'.format(newGame.difficulty, newGame.lower, newGame.upper))
-            break
+    def start(self):
+        while True:
+            gametype = str.upper(input('What game type would you like? Type "EASY", "MEDIUM", or "HARD": '))
+
+            if gametype in self.gametypeDict:
+                self.initializeGame(gametype)
+                break
+            else:
+                print('Sorry, but that was not a valid game type, please try again. ')
+
+    def initializeGame(self, difficulty):
+        self.setDifficulty(difficulty)
+        self.setSecretNumber()
+        return self.startGuessing()
+
+    def startGuessing(self):
+        while True:
+            self.guesses += 1
+            # get input from user
+            print('Please guess a number between {} and {}.'.format(self.lowerBound, self.upperBound))
+            try:
+                guess = int(input('Your {} guess: '.format(ordinal(self.guesses))))
+            except ValueError:
+                print('Input must be integer!')
+                continue
+
+            if self.validateInput(guess) == False:
+                print('You should provide a number between {} and {}: '.format(format(self.lowerBound, self.upperBound)))
+                continue
+
+            # determine if the guess is too low, too high or exactly right
+            difference = guess - self.secretNumber
+
+            if difference > 0:
+                print('Your guess is too high')
+            elif difference < 0:
+                print('Your guess is too low')
+            else:
+                return print('You guessed it! \nYou only needed {} tries to guess the right number.'.format(self.guesses))
+
+    def validateInput(self, number):
+        if number > self.lowerBound or number < self.upperBound:
+            return True
         else:
-            print('Sorry, but that was not a valid game type, please try again')
+            return False
 
-    guess = getGuess(newGame.upper, newGame.lower)
-    while evalFunc(guess, newGame.randomNum) != 0:
-        if evalFunc(guess, newGame.randomNum) == 2:
-            print('Too high!')
-            numGuesses += 1
-            guess = getGuess(newGame.upper, newGame.lower)
-        else:
-            print('Too low!')
-            numGuesses += 1
-            guess = getGuess(newGame.upper, newGame.lower)
+    def setDifficulty(self, difficulty):
+        self.difficulty = difficulty
+        self.upperBound = self.gametypeDict.get(difficulty)
 
-    if numGuesses == 1:
-        trytext = 'try'
-    else:
-        trytext = 'tries'
-    print('You guessed ', str(guess), 'and you were correct! It took you', str(numGuesses), trytext)
+    def setSecretNumber(self):
+        self.secretNumber = random.randint(self.lowerBound, self.upperBound)
 
 
-#function evaluates whether a number equals a number. returns whether guessed number is equal, less than, or greater than the realNum
-def evalFunc(checkNum, realNum):
-    if checkNum == realNum:
-        return int(0)
-    elif checkNum < realNum:
-        return int(1)
-    else:
-        return int(2)
-
-#getGuess function will retrieve a new guess from the user as int. It also handles exceptions.
-def getGuess(upper, lower):
-    upper = upper
-    lower = lower
-    guess = 0
-
-    while True:
-        try:
-            guess = int(input('Please guess a number between {} and {}:'.format(lower, upper)))
-        except ValueError:
-            print('You may only input whole numbers. Please try again.')
-            continue
-        if guess > (lower - 1) and guess < (upper + 1):
-            return int(guess)
-        else:
-            print('Your last guess was outside of the range. Please enter a guess between and including {} and {}'.format(lower, upper))
-
-
-        # if type(guess) != int:
-        #     print('You may only input whole numbers. Please try again.')
-        # elif guess > (lower - 1) and guess < (upper  + 1):
-        #     return int(guess)
-        # else:
-        #     print('Your last guess was outside of the range. Please enter a guess between and including {} and {}'.format(lower, upper))
-
-
-
-
-
-
-
-
-# def playGame(guessrange):
-#     guess = getGuess()
-#     magicNum = guessrange
-#     numGuesses = 0
-#     while evalFunc(guess, magicNum) != 0:
-#         if evalFunc(guess, magicNum) == 2:
-#             print('Too high!')
-#             guess = getGuess()
-#             numGuesses += 1
-#         else:
-#             print('Too low!')
-#             guess = getGuess()
-#             numGuesses += 1
-#
-#     print('You guessed ', str(guess), 'and you were correct!')
-
-
-# def startNewGame1():
-#     gametypeDict = {'HARD': 50, 'MEDIUM': 20, 'EASY': 10}
-#
-#     print("We're starting a new game. Let's get started!")
-#
-#     while True:
-#         gametype = str.upper(input('What game type would you like? Type "easy", "medium", or "hard"'))
-#         if gametype in gametypeDict:
-#
-#             newGame = game(0,gametypeDict.get(gametype), gametype, getRandNum(0, gametypeDict.get(gametype)))
-#             return newGame
-#         else:
-#             print('Sorry, but that was not a valid game type, please try again')
-
-# def getRandNum(lowerNum, upperNum):
-#    return random.randint(lowerNum, upperNum)
-
-    #gametypeDict.get(gametype, 'sorry that was not a valid game type. Please try again')
-
-#
-# a = 'this'
-# print('%a is a test' %(a))
-
-# guess = int(input('guess a num: '))
-#
-# guesscheck = evalFunc(guess, magicNum)
-#
-# while guesscheck != 0:
-#     if guesscheck == 1:
-#         guess = int(input('guess higher number: '))
-#     elif guesscheck == 2:
-#         guess = int(input('guess lower number: '))
-#     guesscheck = evalFunc(guess, magicNum)
-
-
+def go():
+    newGame = guessingGame()
+    newGame.start()
