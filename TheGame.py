@@ -49,6 +49,7 @@ def startNewGame():
     print('You guessed ', str(guess), 'and you were correct! It took you', str(numGuesses), trytext)
 
 
+#function evaluates whether a number equals a number. returns whether guessed number is equal, less than, or greater than the realNum
 def evalFunc(checkNum, realNum):
     if checkNum == realNum:
         return int(0)
@@ -73,8 +74,6 @@ def getGuess(upper, lower):
             return int(guess)
         else:
             print('Your last guess was outside of the range. Please enter a guess between and including {} and {}'.format(lower, upper))
-
-
 
 
         # if type(guess) != int:
