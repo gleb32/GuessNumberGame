@@ -12,6 +12,8 @@ def getRandNum(lowerNum, upperNum):
    return random.randint(lowerNum, upperNum)
 
 
+#This is the main function to play game.
+#could use some clean-up. Has a bug with the counter (number of tries). text prints out wrong number, sometimes.
 def startNewGame():
     gametypeDict = {'HARD': 50, 'MEDIUM': 20, 'EASY': 10}
     numGuesses = 1
@@ -73,7 +75,6 @@ def getGuess(upper, lower):
             print('Your last guess was outside of the range. Please enter a guess between and including {} and {}'.format(lower, upper))
 
 
-startNewGame()
 
 
         # if type(guess) != int:
