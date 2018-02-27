@@ -15,13 +15,25 @@ class guessingGame:
 
     def start(self):
         while True:
-            gametype = str.upper(input('What game type would you like? Type "EASY", "MEDIUM", or "HARD": '))
+            gametype = str.upper(input("""Welcome to Number Guessing Game! If you would like to leave at any time, type 'Exit' 
+            
+What game type would you like? 
+            
+Type "EASY", "MEDIUM", or "HARD": """))
 
             if gametype in self.gametypeDict:
                 self.initializeGame(gametype)
                 break
             else:
                 print('Sorry, but that was not a valid game type, please try again. ')
+
+    def checkExit(self, guess):
+        # if input is "exit", end game.
+        if guess == 'EXIT':
+            print('Thank you for playing. Goodbye!')
+            return True
+        else:
+            return False
 
     def initializeGame(self, difficulty):
         self.setDifficulty(difficulty)
@@ -33,8 +45,12 @@ class guessingGame:
             self.guesses += 1
             # get input from user
             print('Please guess a number between {} and {}.'.format(self.lowerBound, self.upperBound))
+
+            guess = str.upper(input('Your {} guess: '.format(ordinal(self.guesses))))
+            if self.checkExit(guess) is True:
+                break
             try:
-                guess = int(input('Your {} guess: '.format(ordinal(self.guesses))))
+                guess = int(guess)
             except ValueError:
                 print('Input must be integer!')
                 continue
@@ -65,7 +81,6 @@ class guessingGame:
 
     def setSecretNumber(self):
         self.secretNumber = random.randint(self.lowerBound, self.upperBound)
-
 
 def go():
     newGame = guessingGame()
