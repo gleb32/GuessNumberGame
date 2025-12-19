@@ -56,7 +56,7 @@ Type "EASY", "MEDIUM", or "HARD": """))
                 continue
 
             if self.validateInput(guess) == False:
-                print('You should provide a number between {} and {}: '.format(format(self.lowerBound, self.upperBound)))
+                print('You should provide a number between {} and {}: '.format(self.lowerBound, self.upperBound))
                 continue
 
             # determine if the guess is too low, too high or exactly right
@@ -70,7 +70,7 @@ Type "EASY", "MEDIUM", or "HARD": """))
                 return print('You guessed it! \nYou only needed {} tries to guess the right number.'.format(self.guesses))
 
     def validateInput(self, number):
-        if number > self.lowerBound or number < self.upperBound:
+        if number >= self.lowerBound and number <= self.upperBound:
             return True
         else:
             return False
